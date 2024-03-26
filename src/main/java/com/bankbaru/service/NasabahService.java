@@ -1,5 +1,6 @@
 package com.bankbaru.service;
 
+import com.bankbaru.dto.ResponseUpsertNasabahDTO;
 import com.bankbaru.entity.Nasabah;
 import com.bankbaru.dao.NasabahRepository;
 import com.bankbaru.dto.NasabahDTO;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class NasabahService {
@@ -30,11 +32,23 @@ public class NasabahService {
         );
     };
 
+    public NasabahDTO getOneDataNasabahByNamaLengkap(String namaLengkap){
+        var entity = nasabahRepository.findById(namaLengkap).get();
+        return new NasabahDTO(
+                entity.getNomorKtp(),
+                entity.getNamaLengkap(),
+                entity.getAlamat(),
+                entity.getTempatLahir(),
+                entity.getTanggalLahir(),
+                entity.getNomorHp()
+        );
+    };
+
     public void deleteOneNasabah(String nomorKtp){
         nasabahRepository.deleteById(nomorKtp);
     };
 
-    public void insertNasabah(UpsertNasabahDTO dto){
+    public ResponseUpsertNasabahDTO upsertNasabah(UpsertNasabahDTO dto){
         var entity = new Nasabah();
         entity.setNomorKtp(dto.getNomorKtp());
         entity.setNamaLengkap(dto.getNamaLengkap());
@@ -42,7 +56,20 @@ public class NasabahService {
         entity.setTempatLahir(dto.getTempatLahir());
         entity.setTanggalLahir(dto.getTanggalLahir());
         entity.setNomorHp(dto.getNomorHp());
-        nasabahRepository.save(entity);
+        var responseEntity = nasabahRepository.save(entity);
+        var responseDTO = new ResponseUpsertNasabahDTO(
+                responseEntity.getNomorKtp(),
+                responseEntity.getNamaLengkap(),
+                responseEntity.getAlamat(),
+                responseEntity.getTempatLahir(),
+                responseEntity.getTanggalLahir(),
+                responseEntity.getNomorHp()
+        );
+        return responseDTO;
     };
 
+    public boolean existsByNomorKtp(String nomorKtp) {
+        // Menggunakan metode existsById dari Spring Data JPA
+        return nasabahRepository.existsById(nomorKtp);
+    }
 }
