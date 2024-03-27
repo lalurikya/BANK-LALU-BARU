@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -31,7 +32,8 @@ public class UpsertNasabahDTO {
     @Size(max = 30, message = "Tempat Lahir tidak boleh dari 30 chars")
     private String tempatLahir;
 
-    @NotNull(message = "Alamat wajib di-input")
+    @NotNull(message = "Tanggal lahir wajib di-input")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate tanggalLahir;
 
     @NotBlank(message = "Nomor Hp wajib di-input")

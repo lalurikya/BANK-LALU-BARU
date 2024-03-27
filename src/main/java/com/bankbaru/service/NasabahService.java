@@ -32,17 +32,17 @@ public class NasabahService {
         );
     };
 
-    public NasabahDTO getOneDataNasabahByNamaLengkap(String namaLengkap){
-        var entity = nasabahRepository.findById(namaLengkap).get();
-        return new NasabahDTO(
-                entity.getNomorKtp(),
-                entity.getNamaLengkap(),
-                entity.getAlamat(),
-                entity.getTempatLahir(),
-                entity.getTanggalLahir(),
-                entity.getNomorHp()
-        );
-    };
+//    public NasabahDTO getOneDataNasabahByNamaLengkap(String namaLengkap){
+//        var entity = nasabahRepository.findById(namaLengkap).get();
+//        return new NasabahDTO(
+//                entity.getNomorKtp(),
+//                entity.getNamaLengkap(),
+//                entity.getAlamat(),
+//                entity.getTempatLahir(),
+//                entity.getTanggalLahir(),
+//                entity.getNomorHp()
+//        );
+//    };
 
     public void deleteOneNasabah(String nomorKtp){
         nasabahRepository.deleteById(nomorKtp);

@@ -1,6 +1,7 @@
 package com.bankbaru.controller;
 
 import com.bankbaru.dto.UpsertNasabahDTO;
+import com.bankbaru.dto.utility.ResponseDTO;
 import com.bankbaru.service.NasabahService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/api/nasabah")
@@ -21,13 +23,15 @@ public class NasabahRestController extends AbstractRestController{
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     };
 
+
     @GetMapping("/{nomorKtp}")
     public ResponseEntity<Object> getOne(@PathVariable(required = false) String nomorKtp) {
         if (service.existsByNomorKtp(nomorKtp)) {
             var dto = service.getOneDataNasabahByNoKtp(nomorKtp);
             return ResponseEntity.status(HttpStatus.OK).body(dto);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Data dengan nomor KTP '" + nomorKtp + "' tidak ditemukan. Harap masukkan nomor KTP yang benar.");
+            ResponseDTO errorResponse = new ResponseDTO(HttpStatus.NOT_FOUND.value(), "Data dengan nomor KTP " + nomorKtp + " tidak ditemukan. Harap masukkan nomor KTP yang benar.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
     }
 
@@ -35,17 +39,20 @@ public class NasabahRestController extends AbstractRestController{
     @PostMapping
     public ResponseEntity<Object> post(@Valid @RequestBody UpsertNasabahDTO dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.status(422).body(getErrors(bindingResult.getAllErrors()));
+            ResponseDTO errorResponse = new ResponseDTO(HttpStatus.UNPROCESSABLE_ENTITY.value(), getErrors(bindingResult.getAllErrors()));
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(errorResponse);
         }
 
         // Cek apakah data dengan nomor KTP tersebut sudah ada
         if (service.existsByNomorKtp(dto.getNomorKtp())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Data dengan nomor KTP " + dto.getNomorKtp() + " sudah ada");
+            ResponseDTO errorResponse = new ResponseDTO(HttpStatus.BAD_REQUEST.value(), "Data dengan nomor KTP " + dto.getNomorKtp() + " sudah ada");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
 
         // Jika tidak ada kesalahan dan data belum ada, lakukan penyisipan
         service.upsertNasabah(dto);
-        return ResponseEntity.status(HttpStatus.OK).body("Data berhasil dimasukkan");
+        ResponseDTO responseDTO = new ResponseDTO(HttpStatus.OK.value(), "Data berhasil dimasukkan");
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
 
@@ -62,11 +69,13 @@ public class NasabahRestController extends AbstractRestController{
     public ResponseEntity<Object> delete(@PathVariable(required = true) String nomorKtp){
         // Cek apakah data dengan nomor KTP tersebut ada
         if (!service.existsByNomorKtp(nomorKtp)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Data dengan nomor KTP " + nomorKtp + " tidak ditemukan");
+            ResponseDTO responseDTO = new ResponseDTO(HttpStatus.NOT_FOUND.value(), "Data Nasabah dengan nomor KTP " + nomorKtp + " tidak ditemukan");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
         }
 
         service.deleteOneNasabah(nomorKtp);
-        return ResponseEntity.status(HttpStatus.OK).body("Berhasil menghapus data dari nomor KTP " + nomorKtp);
+        ResponseDTO responseDTO = new ResponseDTO(HttpStatus.OK.value(), "Berhasil menghapus data Nasabah dengan nomor KTP " + nomorKtp);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     };
 
 }
