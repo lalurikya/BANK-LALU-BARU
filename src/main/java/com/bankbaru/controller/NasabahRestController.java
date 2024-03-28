@@ -8,7 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -38,21 +42,22 @@ public class NasabahRestController extends AbstractRestController{
 
     @PostMapping
     public ResponseEntity<Object> post(@Valid @RequestBody UpsertNasabahDTO dto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            ResponseDTO errorResponse = new ResponseDTO(HttpStatus.UNPROCESSABLE_ENTITY.value(), getErrors(bindingResult.getAllErrors()));
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(errorResponse);
-        }
-
         // Cek apakah data dengan nomor KTP tersebut sudah ada
         if (service.existsByNomorKtp(dto.getNomorKtp())) {
-            ResponseDTO errorResponse = new ResponseDTO(HttpStatus.BAD_REQUEST.value(), "Data dengan nomor KTP " + dto.getNomorKtp() + " sudah ada");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            return ResponseEntity.badRequest().body(
+                    new ResponseDTO(HttpStatus.BAD_REQUEST.value(), "Data dengan nomor KTP " + dto.getNomorKtp() + " sudah ada")
+            );
+        }
+
+        // Periksa apakah ada kesalahan validasi
+        if (bindingResult.hasErrors()) {
+            ResponseDTO responseDTO = new ResponseDTO(HttpStatus.BAD_REQUEST.value(), "Harap masukan Format tanggal lahir seperti berikut yyyy-MM-dd");
+            return ResponseEntity.badRequest().body(responseDTO);
         }
 
         // Jika tidak ada kesalahan dan data belum ada, lakukan penyisipan
         service.upsertNasabah(dto);
-        ResponseDTO responseDTO = new ResponseDTO(HttpStatus.OK.value(), "Data berhasil dimasukkan");
-        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK.value(), "Data Nasabah berhasil dimasukkan"));
     }
 
 
