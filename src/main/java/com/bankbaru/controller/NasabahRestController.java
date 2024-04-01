@@ -8,11 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -24,12 +21,13 @@ public class NasabahRestController extends AbstractRestController{
     @GetMapping
     public ResponseEntity<Object> getAll(){
         var dto = service.getAllDataNasabah();
+//        int hitung = 5/0;
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     };
 
 
     @GetMapping("/{nomorKtp}")
-    public ResponseEntity<Object> getOne(@PathVariable(required = false) String nomorKtp) {
+    public ResponseEntity<Object> getOne(@PathVariable(required = false) Long nomorKtp) {
         if (service.existsByNomorKtp(nomorKtp)) {
             var dto = service.getOneDataNasabahByNoKtp(nomorKtp);
             return ResponseEntity.status(HttpStatus.OK).body(dto);
@@ -42,17 +40,20 @@ public class NasabahRestController extends AbstractRestController{
 
     @PostMapping
     public ResponseEntity<Object> post(@Valid @RequestBody UpsertNasabahDTO dto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            return ResponseEntity.status(422).body(getErrors(bindingResult.getAllErrors()));
+        }
+        // Periksa apakah ada kesalahan validasi
+//        if (bindingResult.hasErrors()) {
+//            ResponseDTO responseDTO = new ResponseDTO(HttpStatus.BAD_REQUEST.value(), "Harap masukan Format inputan yang sesuai, format KTP berupa angka, format tanggal lahir yyyy-MM-dd");
+//            return ResponseEntity.badRequest().body(responseDTO);
+//        }
+
         // Cek apakah data dengan nomor KTP tersebut sudah ada
         if (service.existsByNomorKtp(dto.getNomorKtp())) {
             return ResponseEntity.badRequest().body(
                     new ResponseDTO(HttpStatus.BAD_REQUEST.value(), "Data dengan nomor KTP " + dto.getNomorKtp() + " sudah ada")
             );
-        }
-
-        // Periksa apakah ada kesalahan validasi
-        if (bindingResult.hasErrors()) {
-            ResponseDTO responseDTO = new ResponseDTO(HttpStatus.BAD_REQUEST.value(), "Harap masukan Format tanggal lahir seperti berikut yyyy-MM-dd");
-            return ResponseEntity.badRequest().body(responseDTO);
         }
 
         // Jika tidak ada kesalahan dan data belum ada, lakukan penyisipan
@@ -73,12 +74,12 @@ public class NasabahRestController extends AbstractRestController{
     @DeleteMapping("/{nomorKtp}")
     public ResponseEntity<Object> delete(@PathVariable(required = true) String nomorKtp){
         // Cek apakah data dengan nomor KTP tersebut ada
-        if (!service.existsByNomorKtp(nomorKtp)) {
+        if (!service.existsByNomorKtp(Long.valueOf(nomorKtp))) {
             ResponseDTO responseDTO = new ResponseDTO(HttpStatus.NOT_FOUND.value(), "Data Nasabah dengan nomor KTP " + nomorKtp + " tidak ditemukan");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
         }
 
-        service.deleteOneNasabah(nomorKtp);
+        service.deleteOneNasabah(Long.valueOf(nomorKtp));
         ResponseDTO responseDTO = new ResponseDTO(HttpStatus.OK.value(), "Berhasil menghapus data Nasabah dengan nomor KTP " + nomorKtp);
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     };

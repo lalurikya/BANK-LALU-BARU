@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseUpsertNasabahDTO {
-    private String nomorKtp;
+    private Long nomorKtp;
     private String namaLengkap;
     private String alamat;
     private String tempatLahir;

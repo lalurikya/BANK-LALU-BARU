@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NasabahDTO {
-    private String nomorKtp;
+    private Long nomorKtp;
     private String namaLengkap;
     private String alamat;
     private String tempatLahir;

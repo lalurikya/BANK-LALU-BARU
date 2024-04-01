@@ -20,8 +20,8 @@ public class NasabahService {
         return nasabahRepository.getAllDataNasabah();
     };
 
-    public NasabahDTO getOneDataNasabahByNoKtp(String nomorKtp){
-        var entity = nasabahRepository.findById(nomorKtp).get();
+    public NasabahDTO getOneDataNasabahByNoKtp(Long nomorKtp){
+        var entity = nasabahRepository.findById(String.valueOf(nomorKtp)).get();
         return new NasabahDTO(
             entity.getNomorKtp(),
             entity.getNamaLengkap(),
@@ -44,8 +44,8 @@ public class NasabahService {
 //        );
 //    };
 
-    public void deleteOneNasabah(String nomorKtp){
-        nasabahRepository.deleteById(nomorKtp);
+    public void deleteOneNasabah(Long nomorKtp){
+        nasabahRepository.deleteById(String.valueOf(nomorKtp));
     };
 
     public ResponseUpsertNasabahDTO upsertNasabah(UpsertNasabahDTO dto){
@@ -68,8 +68,8 @@ public class NasabahService {
         return responseDTO;
     };
 
-    public boolean existsByNomorKtp(String nomorKtp) {
+    public boolean existsByNomorKtp(Long nomorKtp) {
         // Menggunakan metode existsById dari Spring Data JPA
-        return nasabahRepository.existsById(nomorKtp);
+        return nasabahRepository.existsById(String.valueOf(nomorKtp));
     }
 }

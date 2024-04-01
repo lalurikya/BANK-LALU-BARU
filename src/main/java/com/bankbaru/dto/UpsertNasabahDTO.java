@@ -1,8 +1,6 @@
 package com.bankbaru.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,9 +14,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpsertNasabahDTO {
-    @NotBlank(message = "Nomor Ktp Wajib di-input")
-    @Size(max = 25, message = "Nomor KTP Tidak boleh lebih dari 25 chars")
-    private String nomorKtp;
+    @NotNull(message = "Nomor Ktp Wajib di-input")
+    private Long nomorKtp;
 
     @NotBlank(message = "Nama lengkap wajib di-input")
     @Size(max = 50, message = "Nama Lengkap tidak boleh dari 50 chars")
@@ -37,6 +34,6 @@ public class UpsertNasabahDTO {
     private LocalDate tanggalLahir;
 
     @NotBlank(message = "Nomor Hp wajib di-input")
-    @Size(max = 15, message = "Nomor Hp tidak boleh dari 15 chars")
+    @Size(max = 12, message = "Nomor hp maksimal 12 digit")
     private String nomorHp;
 }

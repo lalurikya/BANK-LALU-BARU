@@ -20,7 +20,7 @@ import java.time.LocalDate;
 public class Nasabah {
     @Id
     @Column(name = "nomor_ktp")
-    private String nomorKtp;
+    private Long nomorKtp;
 
     @Column(name = "nama_lengkap")
     private String namaLengkap;
