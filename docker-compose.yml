@@ -24,6 +24,4 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_PASSWORD=postgres
-    volumes:
-      - ./initsql:/docker-entrypoint-initdb.d
+      - POSTGRES_PASSWORD=indocyber
