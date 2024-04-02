@@ -21,7 +21,6 @@ public class NasabahRestController extends AbstractRestController{
     @GetMapping
     public ResponseEntity<Object> getAll(){
         var dto = service.getAllDataNasabah();
-//        int hitung = 5/0;
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     };
 
@@ -43,20 +42,13 @@ public class NasabahRestController extends AbstractRestController{
         if (bindingResult.hasErrors()){
             return ResponseEntity.status(422).body(getErrors(bindingResult.getAllErrors()));
         }
-        // Periksa apakah ada kesalahan validasi
-//        if (bindingResult.hasErrors()) {
-//            ResponseDTO responseDTO = new ResponseDTO(HttpStatus.BAD_REQUEST.value(), "Harap masukan Format inputan yang sesuai, format KTP berupa angka, format tanggal lahir yyyy-MM-dd");
-//            return ResponseEntity.badRequest().body(responseDTO);
-//        }
 
-        // Cek apakah data dengan nomor KTP tersebut sudah ada
         if (service.existsByNomorKtp(dto.getNomorKtp())) {
             return ResponseEntity.badRequest().body(
                     new ResponseDTO(HttpStatus.BAD_REQUEST.value(), "Data dengan nomor KTP " + dto.getNomorKtp() + " sudah ada")
             );
         }
 
-        // Jika tidak ada kesalahan dan data belum ada, lakukan penyisipan
         service.upsertNasabah(dto);
         return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK.value(), "Data Nasabah berhasil dimasukkan"));
     }
@@ -73,7 +65,7 @@ public class NasabahRestController extends AbstractRestController{
 
     @DeleteMapping("/{nomorKtp}")
     public ResponseEntity<Object> delete(@PathVariable(required = true) String nomorKtp){
-        // Cek apakah data dengan nomor KTP tersebut ada
+
         if (!service.existsByNomorKtp(Long.valueOf(nomorKtp))) {
             ResponseDTO responseDTO = new ResponseDTO(HttpStatus.NOT_FOUND.value(), "Data Nasabah dengan nomor KTP " + nomorKtp + " tidak ditemukan");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
