@@ -1,31 +1,3 @@
-#version: "3.8"
-#
-#services:
-#  app:
-#    network_mode: host
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8181:8080"
-#    environment:
-#      - DB_IP=PostgresCont
-#      - DB_PORT=5432
-#      - DB_DATABASE=postgres
-#      - DB_USER=postgres
-#      - DB_PASS=indocyber
-#      - URL_HOST=jdbc:postgresql://localhost:5432/postgres
-#    depends_on:
-#      - PostgresCont
-#
-#  PostgresCont:
-#    image: postgres:latest
-#    network_mode: host
-#    ports:
-#      - "5432:5432"
-#    environment:
-#      - POSTGRES_PASSWORD=indocyber
-
 version: '3.8'
 
 services:
