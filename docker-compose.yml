@@ -1,27 +1,58 @@
-version: "3.8"
+#version: "3.8"
+#
+#services:
+#  app:
+#    network_mode: host
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8181:8080"
+#    environment:
+#      - DB_IP=PostgresCont
+#      - DB_PORT=5432
+#      - DB_DATABASE=postgres
+#      - DB_USER=postgres
+#      - DB_PASS=indocyber
+#      - URL_HOST=jdbc:postgresql://localhost:5432/postgres
+#    depends_on:
+#      - PostgresCont
+#
+#  PostgresCont:
+#    image: postgres:latest
+#    network_mode: host
+#    ports:
+#      - "5432:5432"
+#    environment:
+#      - POSTGRES_PASSWORD=indocyber
+
+version: '3.8'
 
 services:
   app:
-    network_mode: host
+    image: 'docker-spring-boot-postgres:latest'
     build:
       context: .
-      dockerfile: Dockerfile
+    container_name: app
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=indocyber
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=indocyber
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
     ports:
       - "8080:8080"
-    environment:
-      - DB_IP=PostgresCont
-      - DB_PORT=5432
-      - DB_DATABASE=postgres
-      - DB_USER=postgres
-      - DB_PASS=indocyber
-      - URL_HOST=jdbc:postgresql://localhost:5432/postgres
-    depends_on:
-      - PostgresCont
 
-  PostgresCont:
-    image: postgres:latest
-    network_mode: host
+  db:
+    image: postgres
+    container_name: db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=indocyber
+      - POSTGRES_DB=postgres
     ports:
       - "5432:5432"
-    environment:
-      - POSTGRES_PASSWORD=indocyber

@@ -63,6 +63,7 @@ public class NasabahRestController extends AbstractRestController{
         return ResponseEntity.status(422).body(getErrors(bindingResult.getAllErrors()));
     };
 
+
     @DeleteMapping("/{nomorKtp}")
     public ResponseEntity<Object> delete(@PathVariable(required = true) String nomorKtp){
 
