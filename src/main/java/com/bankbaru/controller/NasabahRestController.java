@@ -18,14 +18,14 @@ public class NasabahRestController extends AbstractRestController{
     @Autowired
     private NasabahService service;
 
-    @GetMapping
+    @PostMapping
     public ResponseEntity<Object> getAll(){
         var dto = service.getAllDataNasabah();
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     };
 
 
-    @GetMapping("/{nomorKtp}")
+    @PostMapping("/{nomorKtp}")
     public ResponseEntity<Object> getOne(@PathVariable(required = false) Long nomorKtp) {
         if (service.existsByNomorKtp(nomorKtp)) {
             var dto = service.getOneDataNasabahByNoKtp(nomorKtp);
@@ -36,22 +36,22 @@ public class NasabahRestController extends AbstractRestController{
         }
     }
 
-
-    @PostMapping
+    @PostMapping("/input")
     public ResponseEntity<Object> post(@Valid @RequestBody UpsertNasabahDTO dto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()){
-            return ResponseEntity.status(422).body(getErrors(bindingResult.getAllErrors()));
-        }
+            if (bindingResult.hasErrors()) {
+                return ResponseEntity.status(422).body(getErrors(bindingResult.getAllErrors()));
+            }
 
-        if (service.existsByNomorKtp(dto.getNomorKtp())) {
-            return ResponseEntity.badRequest().body(
-                    new ResponseDTO(HttpStatus.BAD_REQUEST.value(), "Data dengan nomor KTP " + dto.getNomorKtp() + " sudah ada")
-            );
-        }
+            if (service.existsByNomorKtp(dto.getNomorKtp())) {
+                return ResponseEntity.badRequest().body(
+                        new ResponseDTO(HttpStatus.BAD_REQUEST.value(), "Data dengan nomor KTP " + dto.getNomorKtp() + " sudah ada")
+                );
+            }
 
-        service.upsertNasabah(dto);
-        return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK.value(), "Data Nasabah berhasil dimasukkan"));
+            service.upsertNasabah(dto);
+            return ResponseEntity.ok().body(new ResponseDTO(HttpStatus.OK.value(), "Data Nasabah berhasil dimasukkan"));
     }
+
 
 
     @PutMapping

@@ -37,23 +37,23 @@ public class NasabahService {
     };
 
     public ResponseUpsertNasabahDTO upsertNasabah(UpsertNasabahDTO dto){
-        var entity = new Nasabah();
-        entity.setNomorKtp(dto.getNomorKtp());
-        entity.setNamaLengkap(dto.getNamaLengkap());
-        entity.setAlamat(dto.getAlamat());
-        entity.setTempatLahir(dto.getTempatLahir());
-        entity.setTanggalLahir(dto.getTanggalLahir());
-        entity.setNomorHp(dto.getNomorHp());
-        var responseEntity = nasabahRepository.save(entity);
-        var responseDTO = new ResponseUpsertNasabahDTO(
-                responseEntity.getNomorKtp(),
-                responseEntity.getNamaLengkap(),
-                responseEntity.getAlamat(),
-                responseEntity.getTempatLahir(),
-                responseEntity.getTanggalLahir(),
-                responseEntity.getNomorHp()
-        );
-        return responseDTO;
+            var entity = new Nasabah();
+            entity.setNomorKtp(dto.getNomorKtp());
+            entity.setNamaLengkap(dto.getNamaLengkap());
+            entity.setAlamat(dto.getAlamat());
+            entity.setTempatLahir(dto.getTempatLahir());
+            entity.setTanggalLahir(dto.getTanggalLahir());
+            entity.setNomorHp(dto.getNomorHp());
+            var responseEntity = nasabahRepository.save(entity);
+            var responseDTO = new ResponseUpsertNasabahDTO(
+                    responseEntity.getNomorKtp(),
+                    responseEntity.getNamaLengkap(),
+                    responseEntity.getAlamat(),
+                    responseEntity.getTempatLahir(),
+                    responseEntity.getTanggalLahir(),
+                    responseEntity.getNomorHp()
+            );
+            return responseDTO;
     };
 
     public boolean existsByNomorKtp(Long nomorKtp) {

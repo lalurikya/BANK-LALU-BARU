@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Object> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        ResponseDTO responseDTO = new ResponseDTO(HttpStatus.BAD_REQUEST.value(), "Masukan Format inputan yang sesuai, format nomor KTP berupa angka max 16 digit, format tanggal lahir yyyy-MM-dd");
+        ResponseDTO responseDTO = new ResponseDTO(HttpStatus.BAD_REQUEST.value(), "Terjadi kesalahan dalam mem-parse JSON, Masukan Format inputan yang sesuai, harap perhatikan koma, tanda petik dan semi-colone dari JSON dan format nomor KTP berupa angka max 16 digit, format tanggal lahir yyyy-MM-dd");
         return ResponseEntity.badRequest().body(responseDTO);
     }
 
